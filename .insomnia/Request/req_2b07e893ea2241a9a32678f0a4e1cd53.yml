@@ -1,0 +1,24 @@
+_id: req_2b07e893ea2241a9a32678f0a4e1cd53
+type: Request
+parentId: fld_a774ea3c1abd44289fd40cda957590e9
+modified: 1689236548057
+created: 1689236192620
+url: "{{ _.base_url }}/pet/findByStatus?status=available"
+name: Finds Pets by status
+description: ""
+method: GET
+body: {}
+parameters:
+  - name: status
+    disabled: true
+    value: available
+headers: []
+authentication: {}
+metaSortKey: -1689236192620
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
