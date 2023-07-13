@@ -1,7 +1,7 @@
 _id: spc_731f37ce8351423b91bee2952ae5e2ac
 type: ApiSpec
 parentId: wrk_70ce2986b2194c3fb826d83c13f68644
-modified: 1689238636812
+modified: 1689241231614
 created: 1683271690983
 fileName: New_Pet_store_Api
 contents: >
@@ -10,7 +10,7 @@ contents: >
   info:
     title: Swagger Petstore - OpenAPI 3.0
     description: |-
-      This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+      This is a sample usecase for Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
       Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
       You can now help us improve the API whether it's by making changes to the definition itself or to the code.
       That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
