@@ -23,7 +23,7 @@ jobs:
           sudo apt-get update 
           sudo apt-get install -y httpie
       - name: Generate Kong declarative configuration from Spec
-        run: inso generate config ./insomnia/ApiSpec/petts.yaml --type declarative > kong2.x.yaml
+        run: inso generate config ./.insomnia/ApiSpec/petts.yaml --type declarative > kong2.x.yaml
       - name: Convert configuration for 3.0
         run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong2.x.yaml --output-file kong3-b.x.yaml
       - name: Connect to Kong instance 
