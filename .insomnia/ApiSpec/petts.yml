@@ -252,10 +252,7 @@ paths:
       description: delete a pet
       operationId: deletePet
       parameters:
-        - name: api_key
-          in: header
-          description: ''
-          required: false
+        
           schema:
             type: string
         - name: petId
