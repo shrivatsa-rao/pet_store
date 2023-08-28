@@ -1,38 +1,42 @@
-name: Apply generated configuration to local Kong gateway and update API documentation
+name: Demo to Delpoy OAS to Kong # Specify the name of the deployment
 
 on:
   push:
     branches:
-      - main
-
+      - main  # Trigger the deployment when pushing to the main branch
+#j
 jobs:
-  deploy_to_kong:
-    runs-on: ubuntu-latest
-    name: Apply generated configuration to local Kong gateway and update API documentation
+  OAS_To_KONG:
+    runs-on: ubuntu-latest  # Use Ubuntu as the operating system for the job
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup inso
-        uses: kong/setup-inso@v1
-        with:
-          inso-version: 3.5.0
-      - name: Install Kong Deck CLI
-        uses: kong/setup-deck@v1
-      - name: Install httpie 
-        run: | 
-          sudo apt-get update 
-          sudo apt-get install -y httpie
-      - name: Generate Kong declarative configuration from Spec
-        run: inso generate config ./insomnia/ApiSpec/petts.yml --type declarative > kong2.x.yaml
-      - name: Convert configuration for 3.0
-        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong2.x.yaml --output-file kong3-b.x.yaml
-      - name: Connect to Kong instance 
-        run: deck --kong-addr http://localhost:8001 ping
-      - name: fix temporary regex issue 
-        run: sed 's/\\//' kong3-b.x.yaml > kong3.x.yaml
-      - name: Validate Kong declarative configuration
-        run: deck validate -s kong3.x.yaml
-      - name: Deploy declarative config
-        run: deck sync -s kong3.x.yaml --kong-addr http://localhost:8001
-      # - name: Publish Spec to Dev Portal
-      # run: cd ./openapi && http --check-status --ignore-stdin PUT http://16.16.254.147:8001/default/files/specs/orders.yaml contents=@orders.yaml
+    - name: Checkout Code  # Checkout the code from the repository
+      uses: actions/checkout@v2
+
+    - name: Install Insomnia CLI  # Install Insomnia CLI for linting and generating Kong configuration
+      run: |
+        wget https://github.com/Kong/insomnia/releases/download/lib%403.14.0-beta.1/inso-linux-3.14.0-beta.1.tar.xz
+        tar -xf inso-linux-3.14.0-beta.1.tar.xz
+    
+
+    - name: Installing NodeJs
+      uses: actions/setup-node@v1
+    - name: Installing inso
+      run:  npm install -g insomnia
+    - name: Test the Inso OpenApSpec
+      run: ./inso run test spc_0d1e37
+    - name: Lint OpenAPI Spec  # Lint the OpenAPI spec using Insomnia CLI
+      run: ./inso lint spec spc_0d1e37
+    # - name: Get the current path
+    #   run: $(pwd)
+    - name: Generate kong.yaml  # Generate Kong configuration in declarative format
+      run: ./inso generate config spc_0d1e37 --type declarative -o kong.yaml --kongVersion 3
+    - name: install deck CLI  # Install deck CLI for syncing Kong configuration
+      run: |
+        curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
+        tar -xf deck.tar.gz -C /tmp 
+        sudo cp /tmp/deck /usr/local/bin/
+          
+    - name: Deploy to Kong  # Sync the Kong configuration to Kong API Gateway
+      run: deck sync -s kong.yaml --header --kong-addr ${KONG_ADDR}
+      # run: deck sync -s kong.yaml   --kong-addr http://44.203.184.142/:8001
